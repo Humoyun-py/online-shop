@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ category.title }} - KarmaShop{% endblock %}
+
+{% block content %}
+
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>{{ category.title }}</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="{% url 'home' %}">Bosh sahifa <span class="lnr lnr-arrow-right"></span></a>
+                    <a href="{% url 'products' %}">Mahsulotlar <span class="lnr lnr-arrow-right"></span></a>
+                    <a href="#">{{ category.title }}</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="lattest-product-area pb-5 cat-product-area">
+    <div class="container">
+        <div class="row">
+            <!-- Chap filtr -->
+            <div class="col-lg-3">
+                <div class="sidebar-categories">
+                    <div class="head mb-4">
+                        <h5>Boshqa Kategoriyalar</h5>
+                    </div>
+                    <ul class="list mb-4">
+                        <li><a href="{% url 'products' %}">Barchasi</a></li>
+                        {% for cat in categories %}
+                        <li>
+                            <a href="{% url 'category_products' cat.pk %}"
+                               class="{% if cat.pk == category.pk %}font-weight-bold text-primary{% endif %}">
+                                {{ cat.title }}
+                                <span class="badge badge-secondary ml-1">{{ cat.products.count }}</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Mahsulotlar -->
+            <div class="col-lg-9">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <h5>"{{ category.title }}" kategoriyasida {{ products.count }} ta mahsulot</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    {% for product in products %}
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="single-product">
+                            <a href="{% url 'product_detail' product.pk %}">
+                                {% if product.image %}
+                                <img class="img-fluid" src="{{ product.image.url }}" alt="{{ product.title }}">
+                                {% else %}
+                                <img class="img-fluid" src="{% static 'img/product/p1.jpg' %}" alt="{{ product.title }}">
+                                {% endif %}
+                            </a>
+                            <div class="product-details">
+                                <h6><a href="{% url 'product_detail' product.pk %}">{{ product.title }}</a></h6>
+                                <div class="price">
+                                    <h6>{{ product.price|floatformat:0 }} so'm</h6>
+                                </div>
+                                <div class="prd-bottom">
+                                    <a href="{% url 'add_to_cart' product.pk %}" class="social-info">
+                                        <span class="ti-bag"></span>
+                                        <p class="hover-text">Savatga</p>
+                                    </a>
+                                    <a href="{% url 'like_product' product.pk %}" class="social-info">
+                                        <span class="lnr lnr-heart"></span>
+                                        <p class="hover-text">Yoqtirish</p>
+                                    </a>
+                                    <a href="{% url 'product_detail' product.pk %}" class="social-info">
+                                        <span class="lnr lnr-move"></span>
+                                        <p class="hover-text">Ko'rish</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12 text-center py-5">
+                        <i class="fa fa-box fa-3x text-muted mb-3"></i>
+                        <h4 class="text-muted">Bu kategoriyada hali mahsulot yo'q</h4>
+                        <a href="{% url 'products' %}" class="genric-btn primary mt-3">Barcha mahsulotlarga qaytish</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

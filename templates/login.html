@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Kirish - KarmaShop{% endblock %}
+
+{% block content %}
+
+<section class="login_box_area py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <!-- Login rasmi -->
+            <div class="col-lg-5 d-none d-lg-block">
+                <div class="login_box_img h-100">
+                    <img src="{% static 'img/login.jpg' %}" class="img-fluid w-100 h-100"
+                        alt="Kirish" style="object-fit:cover; border-radius:8px;">
+                </div>
+            </div>
+
+            <!-- Login forma -->
+            <div class="col-lg-5 col-md-8">
+                <div class="login-form p-4 border rounded shadow-sm">
+                    <h3 class="text-center mb-4">Tizimga kirish</h3>
+                    <p class="text-center text-muted mb-4">Hisobingizga kiring</p>
+
+                    <form method="POST" action="{% url 'login' %}">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label for="username">Foydalanuvchi nomi</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                </div>
+                                <input type="text" name="username" class="form-control"
+                                    id="username" placeholder="Username" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Parol</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                                </div>
+                                <input type="password" name="password" class="form-control"
+                                    id="password" placeholder="Parol" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group d-flex justify-content-between align-items-center">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="remember">
+                                <label class="form-check-label" for="remember">Eslab qol</label>
+                            </div>
+                            <a href="#" class="text-primary small">Parolni unutdingizmi?</a>
+                        </div>
+
+                        <button type="submit" class="btn primary-btn w-100 mb-3">
+                            <i class="fa fa-sign-in mr-2"></i>Kirish
+                        </button>
+
+                        <p class="text-center mb-0">
+                            Hisobingiz yo'qmi?
+                            <a href="{% url 'register' %}" class="text-primary">Ro'yxatdan o'ting</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

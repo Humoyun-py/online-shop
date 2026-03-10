@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Buyurtma berish - KarmaShop{% endblock %}
+
+{% block content %}
+
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Buyurtma berish</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="{% url 'home' %}">Bosh sahifa <span class="lnr lnr-arrow-right"></span></a>
+                    <a href="{% url 'cart' %}">Savat <span class="lnr lnr-arrow-right"></span></a>
+                    <a href="#">Buyurtma</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="checkout_area py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Manzil va kontakt ma'lumotlari -->
+            <div class="col-lg-7">
+                <div class="billing_details">
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="checkout-title mb-4">
+                                <span class="lnr lnr-map-marker mr-2"></span>Yetkazib berish manzili
+                            </h5>
+                        </div>
+
+                        <form id="checkout-form" method="POST" action="{% url 'checkout' %}">
+                            {% csrf_token %}
+
+                            <!-- Ism va familiya -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="first_name">Ism <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name"
+                                        value="{{ user.first_name }}" placeholder="Ismingiz" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="last_name">Familiya <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name"
+                                        value="{{ user.last_name }}" placeholder="Familiyangiz" required>
+                                </div>
+                            </div>
+
+                            <!-- Telefon -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="phone_number">Telefon raqami <span class="text-danger">*</span></label>
+                                    <input type="tel" class="form-control" id="phone_number" name="phone_number"
+                                        placeholder="+998 90 123 45 67" required>
+                                </div>
+                            </div>
+
+                            <!-- Mamlakat -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="country">Mamlakat</label>
+                                    <input type="text" class="form-control" id="country" name="country"
+                                        value="O'zbekiston" placeholder="Mamlakat">
+                                </div>
+                            </div>
+
+                            <!-- Shahar -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="city">Shahar <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="city" name="city"
+                                        placeholder="Shahar nomi" required>
+                                </div>
+                            </div>
+
+                            <!-- Tuman -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="district">Tuman</label>
+                                    <input type="text" class="form-control" id="district" name="district"
+                                        placeholder="Tuman nomi">
+                                </div>
+                            </div>
+
+                            <!-- Manzil 1 -->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="address_line1">Manzil <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="address_line1" name="address_line1"
+                                        placeholder="Ko'cha, uy raqami..." required>
+                                </div>
+                            </div>
+
+                            <!-- Manzil 2 -->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="address_line2">Qo'shimcha manzil</label>
+                                    <input type="text" class="form-control" id="address_line2" name="address_line2"
+                                        placeholder="Kvartira, qavat...">
+                                </div>
+                            </div>
+
+                            <!-- Pochta indeksi -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="postcode">Pochta indeksi</label>
+                                    <input type="text" class="form-control" id="postcode" name="postcode"
+                                        placeholder="100000">
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buyurtma xulosasi -->
+            <div class="col-lg-5 mt-4 mt-lg-0">
+                <div class="order_box">
+                    <h5 class="checkout-title mb-4">
+                        <span class="lnr lnr-cart mr-2"></span>Buyurtmangiz
+                    </h5>
+
+                    <ul class="list-unstyled">
+                        <li class="d-flex justify-content-between border-bottom pb-2 mb-2">
+                            <strong>Mahsulot</strong>
+                            <strong>Narxi</strong>
+                        </li>
+                        {% for item in cart_items %}
+                        <li class="d-flex justify-content-between mb-2">
+                            <span>{{ item.product.title|truncatechars:30 }} (x{{ item.quantity }})</span>
+                            <span>{{ item.subtotal|floatformat:0 }} so'm</span>
+                        </li>
+                        {% endfor %}
+                        <li class="d-flex justify-content-between border-top pt-3 mt-2">
+                            <strong class="text-primary">Umumiy jami:</strong>
+                            <strong class="text-primary">{{ cart.total_price|floatformat:0 }} so'm</strong>
+                        </li>
+                    </ul>
+
+                    <!-- To'lov usuli -->
+                    <div class="payment-method mt-4">
+                        <h6>To'lov usuli</h6>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="payment" id="cash" value="cash" checked>
+                            <label class="form-check-label" for="cash">
+                                <i class="fa fa-money mr-2 text-success"></i>Naqd pul (yetkazib berishda)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="payment" id="card" value="card">
+                            <label class="form-check-label" for="card">
+                                <i class="fa fa-credit-card mr-2 text-primary"></i>Plastik karta
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Buyurtma berish tugmasi -->
+                    <button type="submit" form="checkout-form" class="btn primary-btn w-100 mt-4">
+                        <span class="lnr lnr-checkmark-circle mr-2"></span>
+                        Buyurtma berish
+                    </button>
+
+                    <a href="{% url 'cart' %}" class="btn btn-outline-secondary w-100 mt-2">
+                        <span class="lnr lnr-arrow-left mr-1"></span> Savatga qaytish
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

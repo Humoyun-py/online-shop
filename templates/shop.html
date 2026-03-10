@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mahsulotlar - KarmaShop{% endblock %}
+
+{% block content %}
+
+<!-- Sahifa sarlavhasi -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Mahsulotlar</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="{% url 'home' %}">Bosh sahifa <span class="lnr lnr-arrow-right"></span></a>
+                    <a href="#">Mahsulotlar</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="lattest-product-area pb-40 cat-product-area">
+    <div class="container">
+        <div class="row">
+            <!-- Qidiruv xabari -->
+            {% if query %}
+            <div class="col-12 mb-3">
+                <div class="alert alert-info">
+                    "<strong>{{ query }}</strong>" bo'yicha {{ products.count }} ta natija topildi
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Chap tomondagi filtr -->
+            <div class="col-lg-3">
+                <div class="sidebar-categories">
+                    <!-- Qidiruv -->
+                    <div class="head mb-4">
+                        <h5>Qidiruv</h5>
+                        <form method="GET" action="{% url 'products' %}">
+                            <div class="input-group">
+                                <input type="text" name="q" class="form-control" value="{{ query }}"
+                                    placeholder="Mahsulot nomi...">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Kategoriyalar -->
+                    <div class="sidebar-filter mb-4">
+                        <h5>Kategoriyalar</h5>
+                        <ul class="list">
+                            <li><a href="{% url 'products' %}">Barchasi</a></li>
+                            {% for cat in categories %}
+                            <li>
+                                <a href="{% url 'category_products' cat.pk %}">
+                                    {{ cat.title }}
+                                    <span class="badge badge-secondary ml-1">{{ cat.products.count }}</span>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <!-- Narx filtri -->
+                    <div class="sidebar-filter mb-4">
+                        <h5>Narx bo'yicha filtr</h5>
+                        <form method="GET" action="{% url 'products' %}">
+                            {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+                            <div class="mb-2">
+                                <label>Minimal narx (so'm)</label>
+                                <input type="number" name="min_price" class="form-control" 
+                                    value="{{ min_price }}" placeholder="0">
+                            </div>
+                            <div class="mb-2">
+                                <label>Maksimal narx (so'm)</label>
+                                <input type="number" name="max_price" class="form-control" 
+                                    value="{{ max_price }}" placeholder="1000000">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Filtrlash</button>
+                        </form>
+                        {% if min_price or max_price %}
+                        <a href="{% url 'products' %}" class="btn btn-outline-secondary btn-sm btn-block mt-2">
+                            Filterni tozalash
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mahsulotlar ro'yxati -->
+            <div class="col-lg-9">
+                <div class="row">
+                    {% for product in products %}
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="single-product">
+                            <!-- Mahsulot rasmi -->
+                            <a href="{% url 'product_detail' product.pk %}">
+                                {% if product.image %}
+                                <img class="img-fluid" src="{{ product.image.url }}" alt="{{ product.title }}">
+                                {% else %}
+                                <img class="img-fluid" src="{% static 'img/product/p1.jpg' %}" alt="{{ product.title }}">
+                                {% endif %}
+                            </a>
+
+                            <div class="product-details">
+                                <h6>
+                                    <a href="{% url 'product_detail' product.pk %}">{{ product.title }}</a>
+                                </h6>
+                                {% if product.short_description %}
+                                <p class="text-muted small">{{ product.short_description|truncatechars:60 }}</p>
+                                {% endif %}
+                                <div class="price">
+                                    <h6>{{ product.price|floatformat:0 }} so'm</h6>
+                                </div>
+                                <div class="prd-bottom">
+                                    <a href="{% url 'add_to_cart' product.pk %}" class="social-info" title="Savatga qo'shish">
+                                        <span class="ti-bag"></span>
+                                        <p class="hover-text">Savatga</p>
+                                    </a>
+                                    <a href="{% url 'like_product' product.pk %}" class="social-info" title="Yoqtirish">
+                                        <span class="lnr lnr-heart"></span>
+                                        <p class="hover-text">Yoqtirish</p>
+                                    </a>
+                                    <a href="{% url 'product_detail' product.pk %}" class="social-info" title="Ko'proq">
+                                        <span class="lnr lnr-move"></span>
+                                        <p class="hover-text">Ko'rish</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12 text-center py-5">
+                        <i class="fa fa-search fa-3x text-muted mb-3"></i>
+                        <h4 class="text-muted">Mahsulot topilmadi</h4>
+                        <p class="text-muted">Boshqa so'z bilan qidiring yoki filtrni tozalang</p>
+                        <a href="{% url 'products' %}" class="genric-btn primary mt-3">Barcha mahsulotlar</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

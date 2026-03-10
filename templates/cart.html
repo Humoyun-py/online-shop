@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Savat - KarmaShop{% endblock %}
+
+{% block content %}
+
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Savat</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="{% url 'home' %}">Bosh sahifa <span class="lnr lnr-arrow-right"></span></a>
+                    <a href="#">Savat</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cart_area py-5">
+    <div class="container">
+        {% if cart_items %}
+        <div class="cart_inner">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Mahsulot</th>
+                            <th scope="col">Narxi</th>
+                            <th scope="col">Miqdori</th>
+                            <th scope="col">Jami</th>
+                            <th scope="col">Harakatlar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                        <tr>
+                            <!-- Mahsulot -->
+                            <td>
+                                <div class="media align-items-center">
+                                    {% if item.product.image %}
+                                    <img src="{{ item.product.image.url }}"
+                                        alt="{{ item.product.title }}" class="mr-3"
+                                        style="width:60px; height:60px; object-fit:cover; border-radius:5px;">
+                                    {% else %}
+                                    <img src="{% static 'img/product/p1.jpg' %}"
+                                        alt="{{ item.product.title }}" class="mr-3"
+                                        style="width:60px; height:60px; object-fit:cover; border-radius:5px;">
+                                    {% endif %}
+                                    <div class="media-body">
+                                        <a href="{% url 'product_detail' item.product.pk %}">
+                                            <h6 class="mb-0">{{ item.product.title }}</h6>
+                                        </a>
+                                        <small class="text-muted">{{ item.product.category.title }}</small>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- Narxi -->
+                            <td class="align-middle">{{ item.product.price|floatformat:0 }} so'm</td>
+
+                            <!-- Miqdori yangilash -->
+                            <td class="align-middle" style="width:160px;">
+                                <form method="POST" action="{% url 'update_cart' item.pk %}" class="d-flex align-items-center">
+                                    {% csrf_token %}
+                                    <div class="input-group" style="width:120px;">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-secondary btn-sm qty-minus" type="button">-</button>
+                                        </div>
+                                        <input type="number" name="quantity" value="{{ item.quantity }}"
+                                            min="0" max="{{ item.product.quantity }}"
+                                            class="form-control form-control-sm text-center qty-input"
+                                            onchange="this.form.submit()">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary btn-sm qty-plus" type="button">+</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </td>
+
+                            <!-- Jami -->
+                            <td class="align-middle font-weight-bold">
+                                {{ item.subtotal|floatformat:0 }} so'm
+                            </td>
+
+                            <!-- O'chirish -->
+                            <td class="align-middle">
+                                <a href="{% url 'remove_from_cart' item.pk %}"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Bu mahsulotni savatdan o\'chirasizmi?')">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                        <!-- Savat jami -->
+                        <tr>
+                            <td colspan="3" class="text-right font-weight-bold">Jami:</td>
+                            <td colspan="2" class="font-weight-bold text-primary">
+                                <h5>{{ cart.total_price|floatformat:0 }} so'm</h5>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tugmalar -->
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% url 'products' %}" class="genric-btn default circle">
+                    <span class="lnr lnr-arrow-left mr-1"></span> Xaridni davom ettirish
+                </a>
+                <a href="{% url 'checkout' %}" class="genric-btn primary circle">
+                    Buyurtma berish <span class="lnr lnr-arrow-right ml-1"></span>
+                </a>
+            </div>
+        </div>
+
+        {% else %}
+        <!-- Bo'sh savat -->
+        <div class="text-center py-5">
+            <img src="{% static 'img/cart.jpg' %}" alt="Bo'sh savat" class="img-fluid mb-4"
+                style="max-width:300px; opacity:0.7;">
+            <h3 class="text-muted">Savatingiz bo'sh!</h3>
+            <p class="text-muted">Xarid qilish uchun mahsulot tanlang</p>
+            <a href="{% url 'products' %}" class="genric-btn primary mt-3">
+                <span class="lnr lnr-bag mr-1"></span> Mahsulotlar do'koniga o'tish
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Miqdor +/- tugmalari
+document.querySelectorAll('.qty-minus').forEach(btn => {
+    btn.addEventListener('click', function() {
+        let input = this.closest('.input-group').querySelector('.qty-input');
+        let val = parseInt(input.value);
+        if (val > 0) {
+            input.value = val - 1;
+            input.dispatchEvent(new Event('change'));
+        }
+    });
+});
+
+document.querySelectorAll('.qty-plus').forEach(btn => {
+    btn.addEventListener('click', function() {
+        let input = this.closest('.input-group').querySelector('.qty-input');
+        let val = parseInt(input.value);
+        let max = parseInt(input.max);
+        if (val < max) {
+            input.value = val + 1;
+            input.dispatchEvent(new Event('change'));
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,247 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz" class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="{% static 'img/fav.png' %}">
+    <meta charset="UTF-8">
+    <title>{% block title %}KarmaShop - Online Do'kon{% endblock %}</title>
+
+    <!-- CSS fayllar -->
+    <link rel="stylesheet" href="{% static 'css/linearicons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nouislider.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ion.rangeSlider.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ion.rangeSlider.skinFlat.css' %}">
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/shop-custom.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- ======== HEADER BOSHLANISHI ======== -->
+<header class="header_area sticky-header">
+    <div class="main_menu">
+        <nav class="navbar navbar-expand-lg navbar-light main_box">
+            <div class="container">
+                <!-- Logo -->
+                <a class="navbar-brand logo_h" href="{% url 'home' %}">
+                    <img src="{% static 'img/logo.png' %}" alt="KarmaShop">
+                </a>
+                <!-- Mobile toggle tugma -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Menyuni ochish">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <!-- Navigatsiya -->
+                <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav menu_nav ml-auto">
+                        <!-- Bosh sahifa -->
+                        <li class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                            <a class="nav-link" href="{% url 'home' %}">Bosh sahifa</a>
+                        </li>
+
+                        <!-- Do'kon dropdown -->
+                        <li class="nav-item submenu dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"
+                                role="button" aria-haspopup="true" aria-expanded="false">Do'kon</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'products' %}">Barcha mahsulotlar</a>
+                                </li>
+                                {% for cat in categories %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'category_products' cat.pk %}">{{ cat.title }}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+
+                        <!-- Bog'lanish -->
+                        <li class="nav-item {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">
+                            <a class="nav-link" href="#">Bog'lanish</a>
+                        </li>
+                    </ul>
+
+                    <!-- O'ng tomondagi ikonlar -->
+                    <ul class="nav navbar-nav navbar-right">
+                        <!-- Savat -->
+                        <li class="nav-item">
+                            <a href="{% url 'cart' %}" class="cart" title="Savat">
+                                <span class="ti-bag"></span>
+                                {% if cart_count > 0 %}
+                                <span class="cart-badge">{{ cart_count }}</span>
+                                {% endif %}
+                            </a>
+                        </li>
+
+                        <!-- Foydalanuvchi menyusi -->
+                        {% if user.is_authenticated %}
+                        <li class="nav-item submenu dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                <span class="ti-user"></span> {{ user.first_name|default:user.username }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                {% if user.is_staff %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/admin/">Admin panel</a>
+                                </li>
+                                {% endif %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'logout' %}">Chiqish</a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">
+                                <span class="ti-user"></span> Kirish
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        <!-- Qidiruv tugmasi -->
+                        <li class="nav-item">
+                            <button class="search">
+                                <span class="lnr lnr-magnifier" id="search"></span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Qidiruv maydoni -->
+    <div class="search_input" id="search_input_box">
+        <div class="container">
+            <form class="d-flex justify-content-between" method="GET" action="{% url 'products' %}">
+                <input type="text" name="q" class="form-control" id="search_input"
+                    placeholder="Mahsulot qidiring..." value="{{ request.GET.q }}">
+                <button type="submit" class="btn"></button>
+                <span class="lnr lnr-cross" id="close_search" title="Yopish"></span>
+            </form>
+        </div>
+    </div>
+</header>
+<!-- ======== HEADER TUGASHI ======== -->
+
+<!-- Xabarlar (Django messages) -->
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% elif message.tags == 'warning' %}warning{% else %}info{% endif %} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Yopish">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- ======== ASOSIY KONTENT ======== -->
+{% block content %}{% endblock %}
+<!-- ======== ASOSIY KONTENT TUGASHI ======== -->
+
+<!-- ======== FOOTER BOSHLANISHI ======== -->
+<footer class="footer-area section_gap">
+    <div class="container">
+        <div class="row footer_top">
+            <!-- Logo va tavsif -->
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="single-footer-widget">
+                    <h6 class="footer_title">Biz haqimizda</h6>
+                    <p>KarmaShop – O'zbekistondagi eng yaxshi online do'kon. Sifatli mahsulotlar, tezkor yetkazib berish.</p>
+                </div>
+            </div>
+
+            <!-- Tez havolalar -->
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="single-footer-widget">
+                    <h6 class="footer_title">Tez havolalar</h6>
+                    <ul class="list">
+                        <li><a href="{% url 'home' %}">Bosh sahifa</a></li>
+                        <li><a href="{% url 'products' %}">Mahsulotlar</a></li>
+                        <li><a href="{% url 'cart' %}">Savat</a></li>
+                        {% if user.is_authenticated %}
+                        <li><a href="{% url 'logout' %}">Chiqish</a></li>
+                        {% else %}
+                        <li><a href="{% url 'login' %}">Kirish</a></li>
+                        <li><a href="{% url 'register' %}">Ro'yxatdan o'tish</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Kategoriyalar -->
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="single-footer-widget">
+                    <h6 class="footer_title">Kategoriyalar</h6>
+                    <ul class="list">
+                        {% for cat in categories %}
+                        <li><a href="{% url 'category_products' cat.pk %}">{{ cat.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Aloqa -->
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="single-footer-widget">
+                    <h6 class="footer_title">Aloqa</h6>
+                    <div class="footer_contact_info">
+                        <p class="flex-row">
+                            <span class="lnr lnr-location"></span>
+                            <a href="#">Toshkent, O'zbekiston</a>
+                        </p>
+                        <p class="flex-row">
+                            <span class="lnr lnr-phone-handset"></span>
+                            <a href="tel:+998901234567">+998 90 123 45 67</a>
+                        </p>
+                        <p class="flex-row">
+                            <span class="lnr lnr-envelope"></span>
+                            <a href="mailto:info@karmashop.uz">info@karmashop.uz</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer pastki qismi -->
+        <div class="footer_bottom d-flex justify-content-between align-items-center flex-wrap">
+            <p class="footer-text m-0">
+                &copy; {% now "Y" %} KarmaShop. Barcha huquqlar himoyalangan.
+            </p>
+            <div class="social-link d-flex">
+                <a href="#" class="mr-4" title="Instagram"><i class="fa fa-instagram"></i></a>
+                <a href="#" class="mr-4" title="Telegram"><i class="fa fa-telegram"></i></a>
+                <a href="#" title="YouTube"><i class="fa fa-youtube-play"></i></a>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- ======== FOOTER TUGASHI ======== -->
+
+<!-- JavaScript fayllar -->
+<script src="{% static 'js/vendor/jquery-2.2.4.min.js' %}"></script>
+<script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jquery.sticky.js' %}"></script>
+<script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+<script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
+<script src="{% static 'js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'js/nouislider.min.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/shop-main.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

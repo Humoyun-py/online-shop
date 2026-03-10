@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tasdiqlash - KarmaShop{% endblock %}
+
+{% block content %}
+
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Buyurtma Tasdiqlash</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="{% url 'home' %}">Bosh sahifa <span class="lnr lnr-arrow-right"></span></a>
+                    <a href="#">Tasdiqlash</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Muvaffaqiyat xabari -->
+                <div class="text-center mb-5">
+                    <div class="confirmation-icon mb-4">
+                        <i class="fa fa-check-circle text-success" style="font-size:80px;"></i>
+                    </div>
+                    <h2 class="text-success">Buyurtmangiz qabul qilindi!</h2>
+                    <p class="text-muted">
+                        Buyurtma raqami: <strong class="text-dark">#{{ order.pk }}</strong>
+                    </p>
+                    <p class="text-muted">Tez orada siz bilan bog'lanamiz. Rahmat!</p>
+                </div>
+
+                <!-- Buyurtma ma'lumotlari -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fa fa-info-circle mr-2"></i>Buyurtma ma'lumotlari
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-sm table-borderless">
+                                    <tr>
+                                        <td class="text-muted">Ism-familiya:</td>
+                                        <td><strong>{{ order.first_name }} {{ order.last_name }}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Telefon:</td>
+                                        <td><strong>{{ order.phone_number }}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Holat:</td>
+                                        <td>
+                                            <span class="badge badge-warning">{{ order.get_status_display }}</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <table class="table table-sm table-borderless">
+                                    <tr>
+                                        <td class="text-muted">Shahar:</td>
+                                        <td><strong>{{ order.city }}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Manzil:</td>
+                                        <td><strong>{{ order.address_line1 }}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Sana:</td>
+                                        <td><strong>{{ order.created_at|date:"d.m.Y H:i" }}</strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buyurtma mahsulotlari -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Buyurtma mahsulotlari</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Mahsulot</th>
+                                    <th>Narxi</th>
+                                    <th>Miqdori</th>
+                                    <th>Jami</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in order_items %}
+                                <tr>
+                                    <td>{{ item.product.title }}</td>
+                                    <td>{{ item.price|floatformat:0 }} so'm</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td><strong>{{ item.subtotal|floatformat:0 }} so'm</strong></td>
+                                </tr>
+                                {% endfor %}
+                                <tr class="table-primary">
+                                    <td colspan="3" class="text-right font-weight-bold">Umumiy jami:</td>
+                                    <td class="font-weight-bold">{{ order.total_price|floatformat:0 }} so'm</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tugmalar -->
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'products' %}" class="genric-btn primary">
+                        <i class="fa fa-shopping-bag mr-1"></i> Xaridni davom ettirish
+                    </a>
+                    <a href="{% url 'home' %}" class="genric-btn default">
+                        <i class="fa fa-home mr-1"></i> Bosh sahifa
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
