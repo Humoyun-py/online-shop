@@ -1,0 +1,286 @@
+/* ============================================================
+   KarmaShop - Maxsus CSS stili
+   O'zbek tilidagi online do'kon uchun yordamchi uslublar
+   ============================================================ */
+
+/* ---- Savat badge (header) ---- */
+.cart {
+    position: relative;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: #f9423a;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 10px;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+/* ---- Mahsulot kartochkasi ---- */
+.single-product {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.single-product:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+.single-product img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.single-product:hover img {
+    transform: scale(1.05);
+}
+
+/* ---- Mahsulot narxi ---- */
+.product-price {
+    color: #f9423a;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+/* ---- Asosiy tugma ---- */
+.btn.primary-btn, .genric-btn.primary {
+    background: linear-gradient(135deg, #f9423a 0%, #f76b1c 100%);
+    color: #fff !important;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn.primary-btn:hover, .genric-btn.primary:hover {
+    background: linear-gradient(135deg, #d73a32 0%, #d4580f 100%);
+    box-shadow: 0 5px 20px rgba(249,66,58,0.4);
+    transform: translateY(-2px);
+}
+
+/* ---- Kategoriya kartochkasi ---- */
+.category-card-custom {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.category-card-custom:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(102,126,234,0.4);
+}
+
+.category-card-custom .deal-details {
+    text-align: center;
+    z-index: 2;
+    position: relative;
+}
+
+.category-card-custom .deal-title {
+    color: #fff !important;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.category-card-custom .cat-count {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.category-card-link {
+    display: block;
+    text-decoration: none !important;
+}
+
+/* ---- Turli rangli kategoriyalar ---- */
+.category-card-custom:nth-child(1) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.category-card-custom:nth-child(2) { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+.category-card-custom:nth-child(3) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+.category-card-custom:nth-child(4) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+/* ---- Breadcrumb ---- */
+.organic-breadcrumb {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    padding: 40px 0;
+}
+
+.organic-breadcrumb h1 {
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.organic-breadcrumb nav a {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.9rem;
+}
+
+.organic-breadcrumb nav a:hover {
+    color: #f9423a;
+}
+
+/* ---- Login forma ---- */
+.login-form {
+    background: #fff;
+    border-radius: 12px;
+}
+
+.login-form h3 {
+    color: #1a1a2e;
+    font-weight: 700;
+}
+
+/* ---- Checkout ---- */
+.checkout-title {
+    color: #1a1a2e;
+    font-weight: 700;
+    border-bottom: 2px solid #f9423a;
+    padding-bottom: 10px;
+}
+
+.order_box {
+    background: #f9f9f9;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #e8e8e8;
+}
+
+/* ---- Savat jadval ---- */
+.cart_inner table thead {
+    background: #1a1a2e;
+    color: #fff;
+}
+
+.cart_inner table thead th {
+    font-weight: 600;
+    border: none;
+}
+
+/* ---- Mahsulot tafsilot ---- */
+.s_product_text h3 {
+    color: #1a1a2e;
+    font-weight: 700;
+}
+
+/* ---- Izoh ---- */
+.single-review {
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.reviewer-name {
+    color: #1a1a2e;
+}
+
+/* ---- Footer ---- */
+footer .footer_title {
+    color: #fff;
+    font-weight: 700;
+}
+
+footer .list li a {
+    color: #999;
+    transition: color 0.3s;
+}
+
+footer .list li a:hover {
+    color: #f9423a;
+}
+
+/* ---- Sidebar ---- */
+.sidebar-categories .head h5 {
+    color: #1a1a2e;
+    font-weight: 700;
+    border-bottom: 2px solid #f9423a;
+    padding-bottom: 8px;
+}
+
+.sidebar-filter h5 {
+    color: #1a1a2e;
+    font-weight: 700;
+    margin-bottom: 12px;
+    font-size: 1rem;
+}
+
+.sidebar-filter .list {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-filter .list li a {
+    color: #555;
+    display: block;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+    transition: color 0.3s;
+    font-size: 0.9rem;
+}
+
+.sidebar-filter .list li a:hover {
+    color: #f9423a;
+}
+
+/* ---- Tasdiqlash sahifasi ---- */
+.confirmation-icon {
+    animation: bounceIn 0.8s ease;
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0); opacity: 0; }
+    60% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+/* ---- Xabarlar (alerts) ---- */
+.alert {
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+/* ---- Tab ---- */
+.nav-tabs .nav-link {
+    color: #555;
+    font-weight: 600;
+}
+
+.nav-tabs .nav-link.active {
+    color: #f9423a;
+    border-color: #f9423a #f9423a #fff;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+    .single-product img {
+        height: 180px;
+    }
+
+    .organic-breadcrumb h1 {
+        font-size: 1.5rem;
+    }
+
+    .order_box {
+        padding: 20px;
+    }
+}
